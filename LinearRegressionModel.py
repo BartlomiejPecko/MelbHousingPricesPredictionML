@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
+from sklearn.neural_network import MLPRegressor
 
 
 class LinearRegressionModel:
@@ -78,3 +79,22 @@ class LinearRegressionModel:
         r2 = r2_score(self.y_test, y_pred)
         print("R-squared (R2) Score:", r2)
 
+    def build_neural_network(self, hidden_layer_sizes=(100,), activation='relu', solver='adam', max_iter=200):
+        self.nn_model = MLPRegressor(hidden_layer_sizes=hidden_layer_sizes, activation=activation, solver=solver, max_iter=max_iter)
+
+    def train_neural_network(self):
+        self.nn_model.fit(self.x_train, self.y_train)
+
+    def evaluate_neural_network(self):
+        y_pred = self.nn_model.predict(self.x_test)
+        r2 = r2_score(self.y_test, y_pred)
+        print("R-squared (R2) Score (Neural Network):", r2)
+
+    def plot_results_neural_network(self, y_pred, model_name="Model"):
+        plt.figure(figsize=(10, 6))
+        plt.scatter(self.y_test, y_pred, edgecolors=(0, 0, 0))
+        plt.plot([self.y_test.min(), self.y_test.max()], [self.y_test.min(), self.y_test.max()], 'k--', lw=4)
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.title(f'{model_name}: Actual vs Predicted')
+        plt.show()

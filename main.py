@@ -10,13 +10,14 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.pipeline import make_pipeline
+
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import cross_val_score
 from CrossVal import CrossVal
 from LinearRegressionModel import LinearRegressionModel
 from DataExploration import DataExploration
 from Preprocessing import Preprocessing
+from NeuralNetworkModel import NeuralNetworkModel
 
 
 def main():
@@ -26,14 +27,15 @@ def main():
     lr_instance = None
     de_instance = None
     pp_instance = None
+    nn_instance = None
 
     while True:
         print("Select an action:")
         print("1: Perform Data Exploration")
         print("2: Preprocessing, heatmaps, histograms")
         print("3: Perform Cross-Validation")
-        print("3: Perform Linear-regression")
-        print("4: Exit")
+        print("4: Perform Linear-regression")
+        print("5: Exit")
 
         choice = input("Enter your choice (1-4): ")
         if choice == '1':
@@ -66,6 +68,19 @@ def main():
         elif choice == '5':
             print("Exiting the program.")
             break
+        elif choice == '6': #test
+            lr_instance = LinearRegressionModel(data_path)
+            lr_instance.drop_columns(['Address', 'Method', 'Date', 'Postcode', 'SellerG', 'Suburb'])
+            lr_instance.separate_features_and_target('Price')
+            lr_instance.scale_features()
+            lr_instance.drop_nan_columns()
+            lr_instance.encode_features()
+            lr_instance.split_data()
+            lr_instance.build_neural_network(hidden_layer_sizes=(64, 32), max_iter=500)
+            lr_instance.train_neural_network()
+            lr_instance.evaluate_neural_network()
+            y_pred_nn = lr_instance.evaluate_neural_network()
+            lr_instance.plot_results_neural_network(y_pred_nn, model_name="Neural Network")
         else:
             print("Invalid choice, please try again.")
 
