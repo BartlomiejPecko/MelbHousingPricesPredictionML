@@ -90,11 +90,3 @@ class LinearRegressionModel:
         r2 = r2_score(self.y_test, y_pred)
         print("R-squared (R2) Score (Neural Network):", r2)
 
-    def plot_results_neural_network(self, y_pred, model_name="Model"):
-        plt.figure(figsize=(10, 6))
-        plt.scatter(self.y_test, y_pred, edgecolors=(0, 0, 0))
-        plt.plot([self.y_test.min(), self.y_test.max()], [self.y_test.min(), self.y_test.max()], 'k--', lw=4)
-        plt.xlabel('Actual')
-        plt.ylabel('Predicted')
-        plt.title(f'{model_name}: Actual vs Predicted')
-        plt.show()

@@ -17,7 +17,7 @@ from CrossVal import CrossVal
 from LinearRegressionModel import LinearRegressionModel
 from DataExploration import DataExploration
 from Preprocessing import Preprocessing
-from NeuralNetworkModel import NeuralNetworkModel
+
 
 
 def main():
@@ -35,7 +35,8 @@ def main():
         print("2: Preprocessing, heatmaps, histograms")
         print("3: Perform Cross-Validation")
         print("4: Perform Linear-regression")
-        print("5: Exit")
+        print("5: Neural network")
+        print("6: Exit")
 
         choice = input("Enter your choice (1-4): ")
         if choice == '1':
@@ -65,10 +66,7 @@ def main():
             lr_instance.split_data()
             lr_instance.train_model()
             lr_instance.evaluate_model()
-        elif choice == '5':
-            print("Exiting the program.")
-            break
-        elif choice == '6': #test
+        elif choice == '5': #test of neural network
             lr_instance = LinearRegressionModel(data_path)
             lr_instance.drop_columns(['Address', 'Method', 'Date', 'Postcode', 'SellerG', 'Suburb'])
             lr_instance.separate_features_and_target('Price')
@@ -79,8 +77,9 @@ def main():
             lr_instance.build_neural_network(hidden_layer_sizes=(64, 32), max_iter=500)
             lr_instance.train_neural_network()
             lr_instance.evaluate_neural_network()
-            y_pred_nn = lr_instance.evaluate_neural_network()
-            lr_instance.plot_results_neural_network(y_pred_nn, model_name="Neural Network")
+        elif choice == '6':
+            print("Exiting the program.")
+            break
         else:
             print("Invalid choice, please try again.")
 
