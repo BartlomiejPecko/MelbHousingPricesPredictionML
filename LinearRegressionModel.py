@@ -3,7 +3,7 @@ import numpy as np  # linear algebra
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
@@ -70,14 +70,31 @@ class LinearRegressionModel:
                                                                                 random_state=random_state)
         print("Data split into training and testing sets")
 
-    def train_model(self):
+    def train_model(self, cv=5):
         self.model = LinearRegression()
+        scores = cross_val_score(self.model, self.x_train, self.y_train, cv=cv, scoring='r2')
+        print("Cross-validated R-squared (R2) scores:", scores)
+        print("Mean R-squared (R2) score:", scores.mean())
         self.model.fit(self.x_train, self.y_train)
 
     def evaluate_model(self):
         y_pred = self.model.predict(self.x_test)
         r2 = r2_score(self.y_test, y_pred)
         print("R-squared (R2) Score:", r2)
+
+    def visualize_predictions(self):
+        y_pred = self.model.predict(self.x_test)
+
+        plt.figure(figsize=(10, 6))
+        plt.scatter(self.y_test, y_pred, color='blue', alpha=0.5)
+        plt.plot([self.y_test.min(), self.y_test.max()], [self.y_test.min(), self.y_test.max()], 'k--',
+                     lw=2)
+
+        plt.title('Actual vs. Predicted')
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.grid(True)
+        plt.show()
 
     def build_neural_network(self, hidden_layer_sizes=(100,), activation='relu', solver='adam', max_iter=200):
         self.nn_model = MLPRegressor(hidden_layer_sizes=hidden_layer_sizes, activation=activation, solver=solver, max_iter=max_iter)
@@ -90,3 +107,16 @@ class LinearRegressionModel:
         r2 = r2_score(self.y_test, y_pred)
         print("R-squared (R2) Score (Neural Network):", r2)
 
+    def visualize_predictions_nn(self):
+        y_pred = self.nn_model.predict(self.x_test)
+
+        plt.figure(figsize=(10, 6))
+        plt.scatter(self.y_test, y_pred, color='blue', alpha=0.5)
+        plt.plot([self.y_test.min(), self.y_test.max()], [self.y_test.min(), self.y_test.max()], 'k--',
+                 lw=2)
+
+        plt.title('Actual vs. Predicted (Neural Network)')
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.grid(True)
+        plt.show()

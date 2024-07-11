@@ -16,11 +16,10 @@ from sklearn.model_selection import cross_val_score
 from CrossVal import CrossVal
 from LinearRegressionModel import LinearRegressionModel
 from DataExploration import DataExploration
-from Preprocessing import Preprocessing
-
 
 
 def main():
+
     data_path = 'melb_data.csv'
 
     cross_val_instance = None
@@ -32,32 +31,21 @@ def main():
     while True:
         print("Select an action:")
         print("1: Perform Data Exploration")
-        print("2: Preprocessing, heatmaps, histograms")
-        print("3: Perform Cross-Validation")
-        print("4: Perform Linear-regression")
-        print("5: Neural network")
-        print("6: Exit")
+        print("2: Perform Cross-Validation")
+        print("3: Perform Linear-regression")
+        print("4: Neural network")
 
         choice = input("Enter your choice (1-4): ")
         if choice == '1':
-            de_instance = DataExploration(data_path)
-            de_instance.print_data()
-            de_instance.show_na_val()
-            de_instance.drop_na_val()
-            de_instance.data_info()
-            de_instance.data_describe()
+            de_instance = DataExploration('melb_data.csv')
+            de_instance.execute_data_exploration()
         elif choice == '2':
-            pp_instance = Preprocessing(data_path)
-            de_instance = DataExploration(data_path)
-            de_instance.drop_na_val()
-            pp_instance.histogram()
-        elif choice == '3':
             cross_val_instance = CrossVal(data_path)
             cross_val_instance.preprocess_data()
             scores = cross_val_instance.perform_cross_validation()
             print("Cross-validation scores:", scores)
-        elif choice == '4':
-            lr_instance = LinearRegressionModel(data_path)
+        elif choice == '3':
+            lr_instance = LinearRegressionModel('melb_data.csv')
             lr_instance.drop_columns(['Address', 'Method', 'Date', 'Postcode', 'SellerG', 'Suburb'])
             lr_instance.separate_features_and_target('Price')
             lr_instance.scale_features()
@@ -66,8 +54,10 @@ def main():
             lr_instance.split_data()
             lr_instance.train_model()
             lr_instance.evaluate_model()
-        elif choice == '5': #test of neural network
-            lr_instance = LinearRegressionModel(data_path)
+            lr_instance.visualize_predictions()
+
+        elif choice == '4':
+            lr_instance = LinearRegressionModel('melb_data.csv')
             lr_instance.drop_columns(['Address', 'Method', 'Date', 'Postcode', 'SellerG', 'Suburb'])
             lr_instance.separate_features_and_target('Price')
             lr_instance.scale_features()
@@ -77,12 +67,9 @@ def main():
             lr_instance.build_neural_network(hidden_layer_sizes=(64, 32), max_iter=500)
             lr_instance.train_neural_network()
             lr_instance.evaluate_neural_network()
-        elif choice == '6':
-            print("Exiting the program.")
-            break
+            lr_instance.visualize_predictions_nn()
         else:
-            print("Invalid choice, please try again.")
-
+            break
 
 if __name__ == "__main__":
     main()
